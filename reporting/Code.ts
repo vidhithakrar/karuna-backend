@@ -21,7 +21,6 @@ function loadData() {
         for(let i = 0; i < extractedRows.length; i+=2) {
             allRows.push(extractedRows[i]);
             const color = extractedRows[i+1];
-            console.log(String(color === COLOR_CREATED));
            if (color === COLOR_CREATED){
                allColors.push(colorCreatedRange);
            }else if(color === COLOR_CLOSED) {
@@ -123,6 +122,7 @@ function getNameFromDocument_(documentPath: string, key: string, cache: Map<stri
         if (document.fields) {
             const docFields = document.fields
             cache.set(key, docFields.name)
+            value = docFields.name
         }
     }
     return value
@@ -139,6 +139,6 @@ export function customOnOpen(e) {
 function reset() {
     const sheet = SpreadsheetApp.getActiveSheet()
     const lastRow = sheet.getDataRange().getLastRow()
-    sheet.deleteRows(3, lastRow - 1)
+    sheet.deleteRows(2, lastRow - 1)
 
 }
