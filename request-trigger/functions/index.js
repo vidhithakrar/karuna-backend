@@ -19,16 +19,16 @@ function isUpdateFromTrigger(before, after) {
 }
 
 function shouldIgnoreChange(change) {
-    const isUpdated = change.before.exists;
-    const isDeleted = !change.after.exists;
+    const isUpdated = change.before.exists
+    const isDeleted = !change.after.exists
 
     if (isDeleted)
-        return true;
+        return true
 
     if (isUpdated && isUpdateFromTrigger(change.before, change.after))
-        return true;
+        return true
 
-    return false;
+    return false
 }
 
 
@@ -42,14 +42,14 @@ async function getTimestampsForFamily(request, family) {
         .limit(1)
     const querySnapshot = await familiesServedBefore.get()
 
-    const lastServedDate = querySnapshot.size > 0 ? querySnapshot.docs[0].data().requestTimestamp : 0;
-    if (lastServedDate != 0) familyTimestamps.lastServedDate = lastServedDate;
+    const lastServedDate = querySnapshot.size > 0 ? querySnapshot.docs[0].data().requestTimestamp : 0
+    if (lastServedDate != 0) familyTimestamps.lastServedDate = lastServedDate
 
-    return familyTimestamps;
+    return familyTimestamps
 }
 
 async function updateFamilies(request, requestDocumentPath) {
-    const requestCollections = await db.doc(requestDocumentPath).listCollections();
+    const requestCollections = await db.doc(requestDocumentPath).listCollections()
     const familyCollection = requestCollections.filter(rc => rc.id === "families")[0]
     return await familyCollection.listDocuments().then(docs => docs.map(async doc => {
         const snapshot = await doc.get()
@@ -69,6 +69,6 @@ exports.onWriteRequest = functions.firestore
         const requestDocumentPath = change.after.ref.path;
         await updateFamilies(request, requestDocumentPath)
         return change.after.ref.set({ triggerTimestamp: Date.now() }, { merge: true })
-    });
+    })
 
-    //https://console.firebase.google.com/v1/r/project/{{PROJECT_ID}}/firestore/indexes?create_composite=ClVwcm9qZWN0cy9rYXJ1bmEtYmFja2VuZC01ZTNkNy9kYXRhYmFzZXMvKGRlZmF1bHQpL2NvbGxlY3Rpb25Hcm91cHMvZmFtaWxpZXMvaW5kZXhlcy9fEAIaCwoHY29udGFjdBABGhQKEHJlcXVlc3RUaW1lc3RhbXAQAhoMCghfX25hbWVfXxAC
+//https://console.firebase.google.com/v1/r/project/{{PROJECT_ID}}/firestore/indexes?create_composite=ClVwcm9qZWN0cy9rYXJ1bmEtYmFja2VuZC01ZTNkNy9kYXRhYmFzZXMvKGRlZmF1bHQpL2NvbGxlY3Rpb25Hcm91cHMvZmFtaWxpZXMvaW5kZXhlcy9fEAIaCwoHY29udGFjdBABGhQKEHJlcXVlc3RUaW1lc3RhbXAQAhoMCghfX25hbWVfXxAC
