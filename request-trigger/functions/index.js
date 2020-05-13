@@ -41,10 +41,8 @@ async function getTimestampsForFamily(request, family) {
         .orderBy('requestTimestamp', 'desc')
         .limit(1)
     const querySnapshot = await familiesServedBefore.get()
-
-    const lastServedDate = querySnapshot.size > 0 ? querySnapshot.docs[0].data().requestTimestamp : 0
-    if (lastServedDate != 0) familyTimestamps.lastServedDate = lastServedDate
-
+    if (querySnapshot.size > 0)
+        familyTimestamps.lastServedDate = querySnapshot.docs[0].data().requestTimestamp
     return familyTimestamps
 }
 
