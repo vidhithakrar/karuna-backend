@@ -14,7 +14,8 @@ function isUpdateFromTrigger(before, after) {
         util.isNullOrUndefined(afterTimestamp);
     const isNextUpdatesFromApp = () => beforeTimestamp === afterTimestamp;
 
-    return !(isFirstUpdateFromApp() || isNextUpdatesFromApp());
+    const isUpdateFromApp = isFirstUpdateFromApp() || isNextUpdatesFromApp()
+    return !isUpdateFromApp;
 }
 
 function shouldIgnoreChange(change) {
