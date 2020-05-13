@@ -37,7 +37,7 @@ async function getTimestampsForFamily(request, family) {
     const familiesServedBefore = db.collectionGroup('families')
         .select('requestTimestamp')
         .where('contact', '==', family.contact)
-        .where('requestTimestamp', '<', request.modifiedTimestamp)
+        .where('requestTimestamp', '<', familyTimestamps.requestTimestamp)
         .orderBy('requestTimestamp', 'desc')
         .limit(1)
     const querySnapshot = await familiesServedBefore.get()
