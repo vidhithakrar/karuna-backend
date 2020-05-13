@@ -1,21 +1,21 @@
-const util = require('util');
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
+const util = require('util')
+const functions = require('firebase-functions')
+const admin = require('firebase-admin')
 
-admin.initializeApp(functions.config().firebase);
-const db = admin.firestore();
+admin.initializeApp(functions.config().firebase)
+const db = admin.firestore()
 
 function isUpdateFromTrigger(before, after) {
-    const beforeTimestamp = before.data().triggerTimestamp;
-    const afterTimestamp = after.data().triggerTimestamp;
+    const beforeTimestamp = before.data().triggerTimestamp
+    const afterTimestamp = after.data().triggerTimestamp
 
     const isFirstUpdateFromApp = () =>
         util.isNullOrUndefined(beforeTimestamp) &&
-        util.isNullOrUndefined(afterTimestamp);
-    const isNextUpdatesFromApp = () => beforeTimestamp === afterTimestamp;
+        util.isNullOrUndefined(afterTimestamp)
+    const isNextUpdatesFromApp = () => beforeTimestamp === afterTimestamp
 
     const isUpdateFromApp = isFirstUpdateFromApp() || isNextUpdatesFromApp()
-    return !isUpdateFromApp;
+    return !isUpdateFromApp
 }
 
 function shouldIgnoreChange(change) {
@@ -63,10 +63,10 @@ exports.onWriteRequest = functions.firestore
     .document('requests/{requestsId}')
     // eslint-disable-next-line no-unused-vars
     .onWrite(async (change, _context) => {
-        if (shouldIgnoreChange(change)) return null;
+        if (shouldIgnoreChange(change)) return null
 
-        const request = change.after.data();
-        const requestDocumentPath = change.after.ref.path;
+        const request = change.after.data()
+        const requestDocumentPath = change.after.ref.path
         await updateFamilies(request, requestDocumentPath)
         return change.after.ref.set({ triggerTimestamp: Date.now() }, { merge: true })
     })
